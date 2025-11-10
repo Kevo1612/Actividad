@@ -1,0 +1,86 @@
+-- Caso 1
+SELECT 
+    TO_CHAR(numrut_cli, '99G999G999')|| '-' || dvrut_cli AS "RUT Cliente",
+    nombre_cli || ' ' || appaterno_cli || ' ' || apmaterno_cli AS "Nombre Completo Cliente",
+    direccion_cli AS "Dirección Cliente",
+    TO_CHAR(renta_cli,'$9G999G999') AS "Renta Cliente",
+    SUBSTR(celular_cli, 1, 2) || '-' ||
+    SUBSTR(celular_cli, 3, 3) || '-' ||
+    SUBSTR(celular_cli, 6, 4) AS "Celular Cliente",
+    CASE 
+        WHEN renta_cli > 500000 THEN 'TRAMO 1'
+        WHEN renta_cli BETWEEN 400000 AND 500000 THEN 'TRAMO 2'
+        WHEN renta_cli BETWEEN 200000 AND 399999 THEN 'TRAMO 3'
+        WHEN renta_cli < 200000 THEN 'TRAMO 4'
+    END AS "Tramo Renta Cliente"
+FROM CLIENTE
+WHERE 
+    renta_cli BETWEEN :renta_min AND :renta_max
+    AND celular_cli IS NOT NULL
+    ORDER BY "Nombre Completo Cliente" ASC;
+
+-- Caso 2
+SELECT
+    id_categoria_emp AS CODIGO_CATEGORIA,
+    
+    CASE id_categoria_emp
+        WHEN 1 THEN 'Gerente'
+        WHEN 2 THEN 'Supervisor'
+        WHEN 3 THEN 'Ejecutivo de Arriendo'
+        WHEN 4 THEN 'Auxiliar'
+    END AS DESCRIPCION_CATEGORIA,
+
+    COUNT(*) AS CANTIDAD_EMPLEADOS,
+
+    CASE id_sucursal
+        WHEN 10 THEN 'Sucursal Las Condes'
+        WHEN 20 THEN 'Sucursal Santiago Centro'
+        WHEN 30 THEN 'Sucursal Providencia'
+        WHEN 40 THEN 'Sucursal Vitacura'
+    END AS SUCURSAL,
+
+
+    TO_CHAR(AVG(sueldo_emp), '$999G999G999') AS SUELDO_PROMEDIO
+    
+FROM EMPLEADO
+
+GROUP BY id_categoria_emp, id_sucursal
+
+HAVING AVG(sueldo_emp) >= :SUELDO_PROMEDIO_MINIMO
+
+ORDER BY AVG(sueldo_emp) DESC;
+
+-- Caso 3
+SELECT
+    id_tipo_propiedad AS CODIGO_TIPO,
+
+    CASE id_tipo_propiedad
+        WHEN 'A' THEN 'CASA'
+        WHEN 'B' THEN 'DEPARTAMENTO'
+        WHEN 'C' THEN 'LOCAL'
+        WHEN 'D' THEN 'PARCELA SIN CASA'
+        WHEN 'E' THEN 'PARCELA CON CASA'
+    END AS DESCRIPCION_TIPO,
+
+    COUNT(*) AS TOTAL_PROPIEDADES,
+
+    TO_CHAR(AVG(valor_arriendo), '$999G999G999') AS PROMEDIO_ARRIENDO,
+
+    ROUND(AVG(superficie), 2) AS PROMEDIO_SUPERFICIE,
+
+    TO_CHAR(AVG(valor_arriendo) / AVG(superficie), '$999G999G999') AS VALOR_ARRIENDO_M2,
+
+    CASE 
+        WHEN AVG(valor_arriendo) / AVG(superficie) < 5000 THEN 'Económico'
+        WHEN AVG(valor_arriendo) / AVG(superficie) BETWEEN 5000 AND 10000 THEN 'Medio'
+        WHEN AVG(valor_arriendo) / AVG(superficie) > 10000 THEN 'Alto'
+        ELSE 'Sin Clasificación'
+    END AS CLASIFICACION
+
+FROM PROPIEDAD
+
+GROUP BY id_tipo_propiedad
+
+HAVING AVG(valor_arriendo) / AVG(superficie) > 1000
+
+ORDER BY VALOR_ARRIENDO_M2 DESC;
