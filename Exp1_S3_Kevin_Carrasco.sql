@@ -74,7 +74,6 @@ SELECT
         WHEN AVG(valor_arriendo) / AVG(superficie) < 5000 THEN 'Económico'
         WHEN AVG(valor_arriendo) / AVG(superficie) BETWEEN 5000 AND 10000 THEN 'Medio'
         WHEN AVG(valor_arriendo) / AVG(superficie) > 10000 THEN 'Alto'
-        ELSE 'Sin Clasificación'
     END AS CLASIFICACION
 
 FROM PROPIEDAD
