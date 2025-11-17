@@ -16,7 +16,7 @@ ORDER BY
 
 
 
--- CASO 2: LISTADO DE CAJEROS CON VENTAS (CORREGIDO)
+-- CASO 2: LISTADO DE CAJEROS CON VENTAS
 SELECT
     TO_CHAR(TRUNC(t.numrut / 1000), 'FM99G999G999') || '-' || t.dvrut AS "RUT Trabajador",
     INITCAP(t.nombre || ' ' || t.appaterno || ' ' || t.apmaterno) AS "Nombre Trabajador",
