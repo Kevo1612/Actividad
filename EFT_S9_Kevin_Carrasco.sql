@@ -3,6 +3,8 @@ SHOW CON_NAME;
 ALTER SESSION SET CONTAINER = XEPDB1;
 
 -- Caso 1 Creacion de usuarios, roles y privilegios
+-- Desde usuario ADMIN
+SHOW USER; -- Verificar usuario actual
 -- ============================================
 -- Usuario EFT (OWNER)
 -- ============================================
