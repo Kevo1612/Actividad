@@ -1,0 +1,31 @@
+package com.example.bancoxyz.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "TRANSACCIONES")
+@Getter
+@Setter
+public class Transaccion {
+
+    @Id
+    @Column(name = "ID")
+    private Long id;
+
+    @Column(name = "FECHA")
+    private LocalDate fecha;
+
+    @Column(name = "MONTO")
+    private BigDecimal monto;
+
+    @Column(name = "TIPO")
+    private String tipo;
+}
